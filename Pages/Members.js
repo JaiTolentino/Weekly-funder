@@ -7,6 +7,7 @@ import GlobalService from '../Services/GlobalService';
 import maincontroller from '../Controllers/maincontroller';
 import TransactionsService from '../Services/TransactionsService';
 import Functions from '../Functions/Functions';
+import BlankAlert from '../Components/AlertBlank';
 
 function Members() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -20,13 +21,14 @@ function Members() {
 
     useEffect(() => {
         const fetchData = async () => {
-            let total = 0;
             let MonthlyGoal = 0;
             let userGoal = 0;
             const memberList = await maincontroller.getMembers();
             setMembers(memberList);
             const fetchedTransactions = await Promise.all(
                 memberList.map(async (data) => {
+                    let total = 0;
+
                     userGoal = data[0].contributionAmount * 4;
                     MonthlyGoal = MonthlyGoal +userGoal;
                     const lastTransaction = await maincontroller.getLastTransaction(data[0].name)
@@ -101,11 +103,16 @@ function Members() {
                                             <TouchableOpacity
                                             style={{padding: 5, borderColor: 'black', borderWidth: 1, borderRadius: 7, width: '40%', justifyContent:'center', alignItems: 'center'}}
                                             onPress={() => {
-                                                setModalVisible(!modalVisible);
+                                                if(name == '' && amount == null || amount == '' && name == ''){
+                                                    BlankAlert()
+                                                }else{
+                                                    setModalVisible(!modalVisible);
                                                     MembersService.createMember(name, amount);
                                                     TransactionsService.createInitTransaction(name, amount);
                                                     setAmount('');
                                                     setText('');
+                                                }
+                                                    
                                             }}>
                                             <Text>Add</Text>
                                             </TouchableOpacity>

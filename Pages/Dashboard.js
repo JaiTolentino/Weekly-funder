@@ -1,12 +1,9 @@
 import { Text, View, TouchableOpacity } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import MembersService from '../Services/MembersService';
 import GlobalService from '../Services/GlobalService';
-import TransactionsService from '../Services/TransactionsService';
 import maincontroller from '../Controllers/maincontroller';
-import Functions from '../Functions/Functions';
-import Alerts from '../Components/Alerts';
+import AlertBilling from '../Components/AlertsBilling';
 function Dashboard(){
     const navigation = useNavigation();
     const [members, setMembers] = useState([]);
@@ -29,10 +26,10 @@ function Dashboard(){
             userTransactions.map((datas) => {
               if(datas.isDebit == false){
                 totalFunds = totalFunds + datas.amount;
-                pendingContribution = pendingContribution + datas.amount;
-              }else {
                 pendingContribution = pendingContribution - datas.amount;
 
+              }else {
+                pendingContribution = pendingContribution + datas.amount;
               }
             })
             const lastTransaction = await maincontroller.getLastTransaction(data[0].name);
@@ -54,7 +51,7 @@ function Dashboard(){
           </View>
           <TouchableOpacity style={{height: "100%", width: "49%", borderColor: 'black', borderRadius: 15, backgroundColor: 'transparent', borderWidth: 1, alignItems: 'center', justifyContent:'center'}}
           onPress={async () => {
-            Alerts()
+            AlertBilling();
             const memberList = await maincontroller.getMembers()
             memberList.map(async (data) => {
                 await maincontroller.createWeeklyBilling(data[0].name, data[0].contributionAmount)

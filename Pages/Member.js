@@ -4,6 +4,7 @@ import DismissKeyboard from '../Components/DismissKeyboard';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import maincontroller from '../Controllers/maincontroller';
 import Functions from '../Functions/Functions';
+import BlankAlert from '../Components/AlertBlank';
 
 
 function Member() {
@@ -82,9 +83,14 @@ function Member() {
                                     <TouchableOpacity
                                     style={{padding: 5, borderColor: 'black', borderWidth: 1, borderRadius: 7, width: '40%', justifyContent:'center', alignItems: 'center'}}
                                     onPress={async () => {
-                                        setModalVisible(!modalVisible);
-                                        maincontroller.createMemberTransaction(user[0].name, parseInt(amount));
-                                        setAmount('')
+                                        if(amount != ''){
+                                            setModalVisible(!modalVisible);
+                                            maincontroller.createMemberTransaction(user[0].name, parseInt(amount));
+                                            setAmount('')
+                                        }else{
+                                            BlankAlert()
+                                        }
+                                        
                                         }}>
                                     <Text>Add</Text>
                                     </TouchableOpacity>
@@ -151,9 +157,9 @@ function Member() {
                     <View style={{width: '100%', backgroundColor: 'black', height: 1}}></View>
                     <View style={{width: '100%',display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '2%'}}>
                         <View style={{width: '50%'}}></View>
-                        <View style={{width: '50%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: "50%"}}>
+                        <View style={{width: '50%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
                             <Text>Total</Text>
-                            <Text style={{fontWeight: 'bold'}}>₱{runningTotal}</Text>
+                            <Text style={{marginLeft: '30%',fontWeight: 'bold'}}>₱{runningTotal}</Text>
                         </View>
                     </View>
                 </View>
